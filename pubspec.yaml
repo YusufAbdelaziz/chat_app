@@ -23,6 +23,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_bloc: ^4.0.0
+  hive: ^1.4.1+1
+  auto_size_text: ^2.1.0
+  emoji_picker: ^0.1.0
+  visibility_detector: ^0.1.5
+  equatable: ^1.1.1
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -32,17 +39,41 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.5
 
+flutter_icons:
+  android: true
+  image_path: "assets/images/message-logo.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
-
+  assets:
+    - assets/images/facebook-logo.png
+    - assets/images/google-logo.png
+    - assets/images/message-logo.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts :
+    - family : Quicksand
+      fonts:
+        - asset: assets/fonts/Quicksand-light.ttf
+          weight: 300
+        - asset: assets/fonts/Quicksand-Regular.ttf
+          weight : 500
+        - asset: assets/fonts/Quicksand-Bold.ttf
+          weight: 700
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-light.ttf
+          weight: 300
+        - asset: assets/fonts/Roboto-Regular.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 700
 
   # To add assets to your application, add an assets section, like this:
   # assets:
