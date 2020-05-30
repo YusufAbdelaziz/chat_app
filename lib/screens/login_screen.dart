@@ -13,24 +13,28 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _emailController;
   TextEditingController _passwordController;
-
+  FocusNode _emailFocusNode;
+  FocusNode _passwordFocusNode;
   @override
   void initState() {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _emailFocusNode = FocusNode();
+    _passwordFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Center(
@@ -43,25 +47,46 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Image.asset(
                   'assets/images/message-logo.png',
-                  height: 120,
-                  width: 120,
+                  height: 140,
+                  width: 140,
                 ),
                 SizedBox(
                   height: 40,
                 ),
                 CustomTextField(
-                  onChanged: (text) => print(text),
+                  focusNode: _emailFocusNode,
+                  onSubmitted: (email) {
+                    FocusScope.of(context).unfocus();
+                    FocusScope.of(context).autofocus(_passwordFocusNode);
+                  },
+                  icon: Icon(Icons.email),
+                  onChanged: (text) {},
                   errorText: null,
                   labelText: 'Email',
                   obscureText: false,
                   textEditingController: _emailController,
                   textInputType: TextInputType.text,
+                  suffixIcon: null,
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 CustomTextField(
-                  onChanged: (text) => print(text),
+                  suffixIcon: GestureDetector(
+                    child: IconButton(
+                      icon: Icon(Icons.visibility_off),
+
+                      /// TODO :  Make bloc to change password visibility
+                      onPressed: () => print('turn visibility on !'),
+                    ),
+                    onTap: () => print('visibility on !'),
+                  ),
+                  focusNode: _passwordFocusNode,
+                  icon: Icon(Icons.lock),
+                  onSubmitted: (password) {
+                    print(password);
+                  },
+                  onChanged: (password) => print(password),
                   errorText: null,
                   labelText: 'Password',
                   obscureText: true,
@@ -69,34 +94,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   textInputType: TextInputType.text,
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
+
+                /// TODO : Make bloc to login
                 CustomButton(
                   text: 'Login',
-                  onTap: () => print('loginnn'),
+                  onTap: () => print('login'),
                 ),
                 SizedBox(
-                  height: 30,
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, SignUpScreen.routeName),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Not a user ? ',
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                      Text(
-                        'Sign up',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 SocialMediaSignIn(
                   onPressed: () => print('google'),
@@ -110,7 +117,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () => print('facebook'),
                   text: 'Sign in with Facebook',
                   imageAsset: 'assets/images/facebook-logo.png',
-                )
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, SignUpScreen.routeName),
+                  child: Text(
+                    'Create new account',
+                    style:
+                        TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
               ],
             ),
           ),

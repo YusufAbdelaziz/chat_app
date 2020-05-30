@@ -1,10 +1,13 @@
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 /// Thanks to Simon Lightfoot who made this great widget.
 ///
 /// Link to the GitHub gist : https://gist.github.com/slightfoot/beb74749bf2e743a6da294b37a7dcf8d
+/// But unfortunately, you can't hide the bar so there's a workaround in which you make a bloc and
+/// [VisibilityDetector] widget to tackle this problem.
 
 class SingleChildScrollViewWithScrollbar extends StatefulWidget {
   const SingleChildScrollViewWithScrollbar({

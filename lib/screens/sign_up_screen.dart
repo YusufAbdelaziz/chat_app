@@ -1,4 +1,3 @@
-
 import 'package:chatapp/widgets/login/custom_button.dart';
 import 'package:chatapp/widgets/login/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _emailController;
   TextEditingController _passwordController;
   TextEditingController _reEnterPasswordController;
+  FocusNode _emailFocusNode;
+  FocusNode _passwordFocusNode;
+  FocusNode _reEnterPasswordFocusNode;
 
   @override
   void initState() {
@@ -20,6 +22,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _reEnterPasswordController = TextEditingController();
+    _emailFocusNode = FocusNode();
+    _passwordFocusNode = FocusNode();
+    _reEnterPasswordFocusNode = FocusNode();
   }
 
   @override
@@ -27,6 +32,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _reEnterPasswordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _reEnterPasswordFocusNode.dispose();
     super.dispose();
   }
 
@@ -41,7 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(
-            Icons.arrow_back,
+            Icons.keyboard_backspace,
             size: 28,
           ),
           onPressed: () => Navigator.of(context).pop(),
@@ -52,6 +60,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           CustomTextField(
+            icon: Icon(Icons.email),
+            suffixIcon: null,
+            focusNode: _emailFocusNode,
+            onSubmitted: (string) {
+              FocusScope.of(context).unfocus();
+              FocusScope.of(context).autofocus(_passwordFocusNode);
+            },
             onChanged: (text) => print(text),
             errorText: null,
             labelText: 'Email',
@@ -61,6 +76,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           space,
           CustomTextField(
+            focusNode: _passwordFocusNode,
+            suffixIcon: null,
+            icon: Icon(Icons.lock),
+            onSubmitted: (string) {
+              FocusScope.of(context).unfocus();
+              FocusScope.of(context).autofocus(_reEnterPasswordFocusNode);
+            },
             onChanged: (text) => print(text),
             errorText: null,
             labelText: 'Password',
@@ -71,6 +93,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           space,
           CustomTextField(
             onChanged: (text) => print(text),
+            icon: Icon(Icons.lock),
+            focusNode: _reEnterPasswordFocusNode,
+            suffixIcon: null,
+            onSubmitted: (string) {},
             errorText: null,
             labelText: 'Re-Enter Password',
             obscureText: true,

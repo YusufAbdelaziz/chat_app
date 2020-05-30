@@ -29,6 +29,13 @@ dependencies:
   emoji_picker: ^0.1.0
   visibility_detector: ^0.1.5
   equatable: ^1.1.1
+  cloud_firestore: ^0.13.6
+  page_transition: ^1.1.5
+  firebase_auth: ^0.16.1
+  connectivity: '>=0.4.8+6 <2.0.0'
+  data_connection_checker: ^0.3.4
+  rxdart: ^0.24.1
+  flare_flutter: ^2.0.3
 
 
 
@@ -53,6 +60,9 @@ flutter:
     - assets/images/facebook-logo.png
     - assets/images/google-logo.png
     - assets/images/message-logo.png
+    - assets/images/user.png
+    - assets/rive/loading_message_app.flr
+    - assets/rive/switch.flr
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

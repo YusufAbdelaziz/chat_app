@@ -19,7 +19,7 @@ class SocialMediaSignIn extends StatelessWidget {
             left: 40,
           ),
           width: width - 50,
-          height: 50,
+          height: 35,
           decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(10)),
           child: Row(

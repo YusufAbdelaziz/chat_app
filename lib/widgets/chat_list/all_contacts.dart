@@ -1,8 +1,13 @@
-import 'file:///C:/Users/yusse/Documents/Work/chat_app/lib/screens/chat_screen/chat_screen.dart';
+import 'package:chatapp/screens/chat_screen/chat_screen_form.dart';
+import 'package:chatapp/screens/chat_screen/chat_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AllContacts extends StatelessWidget {
+  final QuerySnapshot chatData;
+
+  const AllContacts({@required this.chatData});
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -12,29 +17,37 @@ class AllContacts extends StatelessWidget {
         color: Theme.of(context).accentColor,
         width: width,
         child: ListView.separated(
+          padding: EdgeInsets.only(
+            bottom: 10,
+          ),
           shrinkWrap: true,
           separatorBuilder: (context, index) => SizedBox(
             height: 10,
           ),
-          itemCount: 20,
+          itemCount: chatData.documents.length,
           itemBuilder: (context, index) => Container(
             decoration: BoxDecoration(
-
-                /// TODO : This is used for new messages
                 color: Theme.of(context).primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.all(Radius.circular(25))),
             child: ListTile(
-              onTap: () => Navigator.of(context).pushNamed(ChatScreen.routeName),
+              onTap: () => Navigator.of(context)
+                  .pushNamed(ChatScreen.routeName, arguments: chatData.documents[index]),
               leading: CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.blue,
               ),
 
               /// TODO : add the name of the contacts you're talking to
-              title: Text('Name'),
+              title: Text(
+                chatData.documents[index].documentID,
+                style: Theme.of(context).textTheme.headline6,
+              ),
 
               /// TODO : add the last message
-              subtitle: Text('Last message'),
+              subtitle: Text(
+                chatData.documents[index]['text'],
+                style: Theme.of(context).textTheme.headline5,
+              ),
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
