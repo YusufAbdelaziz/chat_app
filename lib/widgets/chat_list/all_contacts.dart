@@ -17,6 +17,7 @@ class AllContacts extends StatelessWidget {
         color: Theme.of(context).accentColor,
         width: width,
         child: ListView.separated(
+          physics: BouncingScrollPhysics(),
           padding: EdgeInsets.only(
             bottom: 10,
           ),
