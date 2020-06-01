@@ -63,7 +63,6 @@ class CustomDrawer extends StatelessWidget {
                       height: 20,
                     ),
                     CustomListTile(
-                      /// TODO : Make the switch work
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       onTap: () {
                         print('button is tapped');
@@ -79,63 +78,31 @@ class CustomDrawer extends StatelessWidget {
                       },
                       trailingWidget:
                           BlocBuilder<RiveActorBloc, RiveActorState>(builder: (ctx, state) {
-                        ///So basically there's an issue
-                        var isDayState = true;
-                        var isNightState = true;
-                        if (state is DayState) {
-                          return Container(
-                            height: 50,
-                            width: 50,
-                            child: FlareActor(
-                              'assets/rive/switch.flr',
-                              animation: state.animationName,
-                              callback: (string) {
-                                if (isDayState) {
-                                  BlocProvider.of<RiveActorBloc>(ctx)
-                                      .add(NightEvent(animationName: nightIdle));
-                                } else {
-                                  BlocProvider.of<RiveActorBloc>(ctx)
-                                      .add(DayEvent(animationName: dayIdle));
-                                }
-                                isDayState = !isDayState;
-                              },
-                            ),
-                          );
-                        } else if (state is NightState) {
-                          return Container(
-                            height: 50,
-                            width: 50,
-                            child: FlareActor(
-                              'assets/rive/switch.flr',
-                              animation: state.animationName,
-                              callback: (text) {
-                                if (isNightState) {
-                                  BlocProvider.of<RiveActorBloc>(ctx)
-                                      .add(DayEvent(animationName: dayIdle));
-                                } else {
-                                  BlocProvider.of<RiveActorBloc>(ctx)
-                                      .add(NightEvent(animationName: nightIdle));
-                                }
-                                isNightState = !isNightState;
-                              },
-                            ),
-                          );
+                        String animationName;
+                        if (state is NightState) {
+                          animationName = state.animationName;
+                        } else if (state is DayState) {
+                          animationName = state.animationName;
                         } else if (state is SwitchingState) {
-                          return Container(
-                            height: 50,
-                            width: 50,
-                            child: FlareActor(
-                              'assets/rive/switch.flr',
-                              callback: (text) => print(text),
-                              animation: state.animationName,
-                            ),
-                          );
-                        } else {
-                          return Container(
-                            height: 0,
-                            width: 0,
-                          );
+                          animationName = state.animationName;
                         }
+                        return Container(
+                          height: 50,
+                          width: 50,
+                          child: FlareActor(
+                            'assets/rive/switch.flr',
+                            animation: animationName,
+                            callback: (animationName) {
+                              if (animationName == switchNight) {
+                                BlocProvider.of<RiveActorBloc>(ctx)
+                                    .add(NightEvent(animationName: nightIdle));
+                              } else if (animationName == switchDay) {
+                                BlocProvider.of<RiveActorBloc>(ctx)
+                                    .add(DayEvent(animationName: dayIdle));
+                              }
+                            },
+                          ),
+                        );
                       }),
                       leadingWidget:
                           Icon(Icons.brightness_medium, color: Theme.of(ctx).buttonColor),

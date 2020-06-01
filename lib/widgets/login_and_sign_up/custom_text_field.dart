@@ -1,5 +1,5 @@
-import 'package:chatapp/screens/login_screen.dart';
-import 'package:chatapp/screens/sign_up_screen.dart';
+import 'file:///C:/Users/yusse/Documents/Work/chat_app/lib/screens/login_screen/login_screen_form.dart';
+import 'file:///C:/Users/yusse/Documents/Work/chat_app/lib/screens/sign_up_screen/sign_up_screen_form.dart';
 import 'package:flutter/material.dart';
 
 /// This widget is used in [LoginScreen] and [SignUpScreen] to get the email and password for
@@ -32,12 +32,9 @@ class CustomTextField extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Container(
-      padding: const EdgeInsets.only(
-        left: 10,
-        right: 10,
-      ),
+      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 3),
       width: width - 50,
-      height: 60,
+      constraints: BoxConstraints(minHeight: 50, maxHeight: 90),
       decoration: BoxDecoration(
           color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(10)),
       child: TextField(
@@ -45,10 +42,12 @@ class CustomTextField extends StatelessWidget {
         keyboardType: textInputType,
         controller: textEditingController,
         focusNode: focusNode,
+        style: TextStyle(fontSize: 18),
         obscureText: obscureText,
         decoration: InputDecoration(
             labelText: labelText,
             border: InputBorder.none,
+            labelStyle: TextStyle(fontSize: 16),
             errorText: errorText,
             icon: icon,
             suffixIcon: suffixIcon),

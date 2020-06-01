@@ -1,13 +1,10 @@
-import 'package:chatapp/api/firebase_repository.dart';
 import 'package:chatapp/screens/chat_list_screen/chat_list_screen.dart';
-import 'package:chatapp/screens/chat_screen/chat_screen.dart';
-import 'package:chatapp/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:page_transition/page_transition.dart';
 
+import 'package:chatapp/api/firebase_repository.dart';
 import 'bloc/all_contacts/bloc.dart';
-
+import 'screens/login_screen/login_screen.dart';
 import 'utilities/app_router.dart';
 import 'utilities/simple_bloc_delegate.dart';
 
@@ -43,8 +40,7 @@ class _MyAppState extends State<MyApp> {
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-                pageTransitionsTheme: PageTransitionsTheme(
-                    builders: {TargetPlatform.android: CupertinoPageTransitionsBuilder()}),
+
                 primaryColor: Colors.blue,
                 accentColor: Colors.white,
                 cursorColor: Colors.blue,
