@@ -16,7 +16,7 @@ class UserRepository {
     _user.token = tokenResult.token;
     _user.tokenExpiryDate = tokenResult.expirationTime;
     _user.id = firebaseUser.uid;
-    saveUserData();
+    await saveUserData();
   }
 
   Future<void> updateFacebookUserInfo(
@@ -50,11 +50,21 @@ class UserRepository {
     await _updateUserInfo(firebaseUser: firebaseUser);
   }
 
-  void saveUserData() {
-    var userBox = Hive.box(userBoxName);
+  /// Saves user data using Hive.
+  Future<void> saveUserData() async {
+    /// Declare the userBox variable then check if there's a box opened or not, so you cover the
+    /// scenario in which the user may log in so the his data is saved and logged out so his data is
+    /// removed therefore the box is removed and lastly the user logged in again so you have to re-
+    /// create the box once again.
+    Box<dynamic> userBox;
+    if (!Hive.isBoxOpen(userBoxName)) {
+      userBox = await Hive.openBox(userBoxName);
+    }
+    userBox = Hive.box(userBoxName);
     userBox.put(0, _user.toJson());
   }
 
+  /// Fetches data from Hive
   Future<void> fetchUserData() async {
     var userBox = await Hive.openBox(userBoxName);
     if (userBox.isNotEmpty) {

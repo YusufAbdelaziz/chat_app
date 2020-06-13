@@ -18,8 +18,8 @@ class CustomDrawer extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     return BlocProvider<RiveActorBloc>(
       /// TODO : Change how the event is triggered with respect to the theme
-      create: (context) =>
-          RiveActorBloc()..add(DayEvent(animationName: user.isDarkMode ? nightIdle : dayIdle)),
+      create: (context) => RiveActorBloc()
+        ..add(DayEvent(animationName: user.isDarkMode ?? false ? nightIdle : dayIdle)),
       child: Builder(
         builder: (ctx) => Drawer(
             child: Column(
