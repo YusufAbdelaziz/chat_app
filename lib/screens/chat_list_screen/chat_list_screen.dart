@@ -11,19 +11,6 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-  AllContactsBloc _allContactsBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _allContactsBloc = BlocProvider.of<AllContactsBloc>(context);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _allContactsBloc.disposeMessageController();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +58,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
               if (state is ErrorContactsState) {
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text(state.errorMsg),
-                  backgroundColor: Colors.red,
+                  backgroundColor: Theme.of(context).errorColor,
                   duration: Duration(minutes: 30),
                   action: SnackBarAction(
                     label: 'Close',

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:chatapp/api/firebase_repository.dart';
+import 'package:chatapp/api/firestore_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
@@ -8,7 +8,7 @@ import './bloc.dart';
 
 /// This bloc is used to load the chats you have.
 class AllContactsBloc extends Bloc<AllContactsEvent, AllContactsState> {
-  final FirebaseRepository firebaseRepository;
+  final FirestoreRepository firebaseRepository;
   StreamController<QuerySnapshot> messagesController;
 
   AllContactsBloc({@required this.firebaseRepository}) {

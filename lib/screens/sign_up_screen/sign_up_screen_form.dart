@@ -1,9 +1,13 @@
+import 'package:chatapp/bloc/auth_bloc/bloc.dart';
+import 'package:chatapp/bloc/sign_up_blocs/sign_up_bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
+
 import 'package:chatapp/bloc/sign_up_blocs/sign_up_email_bloc/bloc.dart';
+import 'package:chatapp/bloc/sign_up_blocs/sign_up_name_bloc/bloc.dart';
 import 'package:chatapp/bloc/sign_up_blocs/sign_up_password_bloc/bloc.dart';
 import '../../widgets/login_and_sign_up/custom_text_field.dart';
 import '../../widgets/login_and_sign_up/custom_button.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpScreenForm extends StatefulWidget {
   @override
@@ -14,6 +18,8 @@ class _SignUpScreenFormState extends State<SignUpScreenForm> {
   TextEditingController _emailController;
   TextEditingController _passwordController;
   TextEditingController _reEnterPasswordController;
+  TextEditingController _nameController;
+  FocusNode _nameFocusNode;
   FocusNode _emailFocusNode;
   FocusNode _passwordFocusNode;
   FocusNode _reEnterPasswordFocusNode;
@@ -21,9 +27,11 @@ class _SignUpScreenFormState extends State<SignUpScreenForm> {
   @override
   void initState() {
     super.initState();
+    _nameController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _reEnterPasswordController = TextEditingController();
+    _nameFocusNode = FocusNode();
     _emailFocusNode = FocusNode();
     _passwordFocusNode = FocusNode();
     _reEnterPasswordFocusNode = FocusNode();
@@ -31,9 +39,11 @@ class _SignUpScreenFormState extends State<SignUpScreenForm> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _reEnterPasswordController.dispose();
+    _nameFocusNode.dispose();
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
     _reEnterPasswordFocusNode.dispose();
@@ -68,6 +78,30 @@ class _SignUpScreenFormState extends State<SignUpScreenForm> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                BlocBuilder<SignUpNameBloc, SignUpNameState>(builder: (context, state) {
+                  String errorText;
+                  if (state is ValidSignUpName) {
+                    errorText = state.errorText;
+                  } else if (state is InvalidSignUpName) {
+                    errorText = state.errorText;
+                  }
+                  return CustomTextField(
+                    focusNode: _nameFocusNode,
+                    suffixIcon: null,
+                    icon: Icon(Icons.person),
+                    onSubmitted: (_) {
+                      FocusScope.of(context).autofocus(_emailFocusNode);
+                    },
+                    onChanged: (name) =>
+                        BlocProvider.of<SignUpNameBloc>(context).add(SignUpNameChecked(name: name)),
+                    errorText: errorText,
+                    labelText: 'Name',
+                    obscureText: false,
+                    textEditingController: _nameController,
+                    textInputType: TextInputType.text,
+                  );
+                }),
+                space,
                 BlocBuilder<SignUpEmailBloc, SignUpEmailState>(builder: (context, state) {
                   String errorText;
                   if (state is ValidSignUpEmail) {
@@ -143,28 +177,56 @@ class _SignUpScreenFormState extends State<SignUpScreenForm> {
                   },
                 ),
                 space,
-
-                /// TODO : Make sign up work
-                CustomButton(
-                  text: 'Sign Up',
-                  onTap: () {
-                    if (isEmailAndPasswordValid(context)) {
-                      /// TODO : Make authentication work
-                      print('Let\'s Sign Up !');
-                    } else {
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          'Please Enter a valid password and email',
-                        ),
-                        action: SnackBarAction(
-                          onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
-                          label: 'Hide',
-                          textColor: Theme.of(context).primaryColor,
-                        ),
-                      ));
-                    }
-                  },
-                ),
+                BlocConsumer<SignUpBloc, SignUpState>(listener: (context, state) {
+                  if (state is SignUpWithEmailSuccess) {
+                    Navigator.of(context).pop();
+                    BlocProvider.of<AuthBloc>(context).add(SignUpAuth());
+                  } else if (state is SignUpError) {
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                        state.errorMessage,
+                      ),
+                      backgroundColor: Theme.of(context).errorColor,
+                      action: SnackBarAction(
+                        onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                        label: 'Hide',
+                        textColor: Theme.of(context).accentColor,
+                      ),
+                    ));
+                  }
+                }, builder: (context, state) {
+                  if (state is InitialSignUpState) {
+                    return CustomButton(
+                      text: 'Sign Up',
+                      onTap: () {
+                        if (areEmailAndPasswordAndNameValid(context)) {
+                          BlocProvider.of<SignUpBloc>(context).add(SignedUpWithEmail(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                              userName: _nameController.text));
+                        } else {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                              'Please Enter valid password, email, and name',
+                            ),
+                            action: SnackBarAction(
+                              onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                              label: 'Hide',
+                              textColor: Theme.of(context).primaryColor,
+                            ),
+                          ));
+                        }
+                      },
+                    );
+                  } else if (state is LoadingSignUpWithEmail) {
+                    return loadingIndicator(context);
+                  } else {
+                    return Container(
+                      height: 0,
+                      width: 0,
+                    );
+                  }
+                }),
               ],
             ),
           ),
@@ -176,15 +238,31 @@ class _SignUpScreenFormState extends State<SignUpScreenForm> {
   final space = SizedBox(
     height: 10,
   );
+  Widget loadingIndicator(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return Container(
+      width: width - 50,
+      height: 40,
+      child: Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+        ),
+      ),
+    );
+  }
 
-  bool isEmailAndPasswordValid(BuildContext context) {
+  bool areEmailAndPasswordAndNameValid(BuildContext context) {
     final currentPasswordState = BlocProvider.of<SignUpPasswordBloc>(context).state;
     final currentEmailState = BlocProvider.of<SignUpEmailBloc>(context).state;
+    final currentNameState = BlocProvider.of<SignUpNameBloc>(context).state;
+    final isNameNotEmpty = _nameController.text.isNotEmpty;
     final isPasswordNotEmpty = _passwordController.text.isNotEmpty;
     final isRePasswordNotEmpty = _reEnterPasswordController.text.isNotEmpty;
     final isEmailNotEmpty = _emailController.text.isNotEmpty;
     return currentPasswordState is ValidSignUpPasswords &&
         currentEmailState is ValidSignUpEmail &&
+        currentNameState is ValidSignUpName &&
+        isNameNotEmpty &&
         isPasswordNotEmpty &&
         isRePasswordNotEmpty &&
         isEmailNotEmpty;

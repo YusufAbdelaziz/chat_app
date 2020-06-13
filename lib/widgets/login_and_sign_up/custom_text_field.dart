@@ -1,8 +1,8 @@
-import 'file:///C:/Users/yusse/Documents/Work/chat_app/lib/screens/login_screen/login_screen_form.dart';
-import 'file:///C:/Users/yusse/Documents/Work/chat_app/lib/screens/sign_up_screen/sign_up_screen_form.dart';
 import 'package:flutter/material.dart';
 
-/// This widget is used in [LoginScreen] and [SignUpScreen] to get the email and password for
+import 'package:chatapp/screens/auth_screen/auth_screen.dart';
+import 'package:chatapp/screens/sign_up_screen/sign_up_screen.dart';
+/// This widget is used in [AuthScreen] and [SignUpScreen] to get the email and password for
 /// authentication.
 class CustomTextField extends StatelessWidget {
   final String labelText;

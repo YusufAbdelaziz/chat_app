@@ -11,15 +11,14 @@ class SocialMediaSignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-
     return GestureDetector(
       onTap: onPressed,
       child: Container(
           padding: const EdgeInsets.only(
             left: 40,
           ),
-          width: width - 50,
-          height: 35,
+          width: width != 0 ? width - 50 : 250,
+          height: 40,
           decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(10)),
           child: Row(

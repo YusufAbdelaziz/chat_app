@@ -1,3 +1,6 @@
+import 'package:chatapp/bloc/auth_bloc/auth_bloc.dart';
+import 'package:chatapp/bloc/auth_bloc/auth_event.dart';
+import 'package:chatapp/bloc/login_blocs/login_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,13 +12,12 @@ import '../../widgets/login_and_sign_up/custom_text_field.dart';
 import '../../widgets/login_and_sign_up/custom_button.dart';
 import '../../widgets/login_and_sign_up/social_media_sign_in.dart';
 
-
-class LoginScreenForm extends StatefulWidget {
+class AuthScreenForm extends StatefulWidget {
   @override
-  _LoginScreenFormState createState() => _LoginScreenFormState();
+  _AuthScreenFormState createState() => _AuthScreenFormState();
 }
 
-class _LoginScreenFormState extends State<LoginScreenForm> {
+class _AuthScreenFormState extends State<AuthScreenForm> {
   TextEditingController _emailController;
   TextEditingController _passwordController;
   FocusNode _emailFocusNode;
@@ -138,41 +140,83 @@ class _LoginScreenFormState extends State<LoginScreenForm> {
                   SizedBox(
                     height: 20,
                   ),
-                  CustomButton(
-                    text: 'Login',
-                    onTap: () {
-                      if (isEmailAndPasswordValid(context)) {
-                        /// TODO : Make authentication work
-                        print('Let\'s log in !');
-                      } else {
+                  BlocConsumer<LoginBloc, LoginState>(
+                    listener: (context, state) {
+                      if (state is LoginError) {
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Text(
-                            'Please Enter a valid password and email',
+                            state.errorMessage,
                           ),
+                          backgroundColor: Theme.of(context).errorColor,
                           action: SnackBarAction(
                             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
                             label: 'Hide',
-                            textColor: Theme.of(context).primaryColor,
+                            textColor: Theme.of(context).accentColor,
                           ),
                         ));
+                      } else if (state is LoginWithEmailSuccess ||
+                          state is LoginWithFacebookSuccess ||
+                          state is LoginWithGoogleSuccess) {
+                        BlocProvider.of<AuthBloc>(context).add(SignInAuth());
                       }
                     },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SocialMediaSignIn(
-                    onPressed: () => print('google'),
-                    text: 'Sign in with Google',
-                    imageAsset: 'assets/images/google-logo.png',
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SocialMediaSignIn(
-                    onPressed: () => print('facebook'),
-                    text: 'Sign in with Facebook',
-                    imageAsset: 'assets/images/facebook-logo.png',
+                    builder: (context, state) {
+                      return Column(
+                        children: <Widget>[
+                          if (state is! LoadingLoginWithEmail)
+                            CustomButton(
+                              text: 'Login',
+                              onTap: () async {
+                                if (isEmailAndPasswordValid(context)) {
+                                  BlocProvider.of<LoginBloc>(context).add(LoggedInWithEmail(
+                                      email: _emailController.text,
+                                      password: _passwordController.text));
+                                } else {
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: Text(
+                                      'Please Enter a valid password and email',
+                                    ),
+                                    backgroundColor: Theme.of(context).errorColor,
+                                    action: SnackBarAction(
+                                      onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                                      label: 'Hide',
+                                      textColor: Theme.of(context).accentColor,
+                                    ),
+                                  ));
+                                }
+                              },
+                            )
+                          else
+                            loadingIndicator(context),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          if (state is! LoadingLoginWithGoogle)
+                            SocialMediaSignIn(
+                              onPressed: () {
+                                BlocProvider.of<LoginBloc>(context).add(LoggedInWithGoogle());
+                              },
+                              text: 'Sign in with Google',
+                              imageAsset: 'assets/images/google-logo.png',
+                            )
+                          else
+                            loadingIndicator(context),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          if (state is! LoadingLoginWithFacebook)
+                            SocialMediaSignIn(
+                              onPressed: () {
+                                BlocProvider.of<LoginBloc>(context).add(LoggedInWithFacebook());
+                              },
+                              text: 'Sign in with Facebook',
+                              imageAsset: 'assets/images/facebook-logo.png',
+                            )
+                          else
+                            loadingIndicator(context)
+                        ],
+                      );
+                    },
                   ),
                   SizedBox(
                     height: 15,
@@ -193,6 +237,19 @@ class _LoginScreenFormState extends State<LoginScreenForm> {
             ),
           ),
         ));
+  }
+
+  Widget loadingIndicator(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return Container(
+      width: width - 50,
+      height: 40,
+      child: Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+        ),
+      ),
+    );
   }
 
   bool isEmailAndPasswordValid(BuildContext context) {

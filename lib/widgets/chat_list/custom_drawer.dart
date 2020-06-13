@@ -1,6 +1,7 @@
+import 'package:chatapp/bloc/auth_bloc/bloc.dart';
 import 'package:chatapp/bloc/rive_actor/bloc.dart';
+import 'package:chatapp/models/user.dart';
 import 'package:chatapp/widgets/chat_list/custom_list_tile.dart';
-import 'package:chatapp/widgets/chat_list/rive_actor.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,13 +11,15 @@ class CustomDrawer extends StatelessWidget {
   final switchNight = 'switch_night';
   final dayIdle = 'day_idle';
   final switchDay = 'switch_day';
+  final user = User.getInstance();
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return BlocProvider<RiveActorBloc>(
       /// TODO : Change how the event is triggered with respect to the theme
-      create: (context) => RiveActorBloc()..add(DayEvent(animationName: dayIdle)),
+      create: (context) =>
+          RiveActorBloc()..add(DayEvent(animationName: user.isDarkMode ? nightIdle : dayIdle)),
       child: Builder(
         builder: (ctx) => Drawer(
             child: Column(
@@ -41,10 +44,18 @@ class CustomDrawer extends StatelessWidget {
                     CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: 50,
-                      child: Image.asset(
-                        'assets/images/user.png',
-                        color: Colors.black54,
-                      ),
+                      child: user.imageUrl == null
+                          ? Image.asset(
+                              'assets/images/user.png',
+                              color: Colors.black54,
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.network(
+                                user.imageUrl,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
                     ),
                     FlatButton.icon(
                       onPressed: () => print('edit profile'),
@@ -111,14 +122,33 @@ class CustomDrawer extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    CustomListTile(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 11),
-
-                      /// TODO : implement log out functionality
-                      onTap: () => print('log out'),
-                      trailingWidget: Icon(Icons.navigate_next, color: Theme.of(ctx).buttonColor),
-                      leadingWidget: Icon(Icons.exit_to_app, color: Theme.of(ctx).buttonColor),
-                      title: 'Log out',
+                    BlocListener<AuthBloc, AuthState>(
+                      listener: (context, state) {
+                        if (state is ErrorState) {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text(state.errorMessage),
+                            backgroundColor: Theme.of(context).errorColor,
+                            duration: Duration(seconds: 3),
+                            action: SnackBarAction(
+                              label: 'Close',
+                              textColor: Colors.white,
+                              onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                            ),
+                          ));
+                        } else if (state is LogoutSuccess) {
+                          /// Don't forget to dismiss the drawer and fire the event to switch between
+                          ///
+                          Navigator.of(context).pop();
+                          BlocProvider.of<AuthBloc>(context).add(AuthChecked());
+                        }
+                      },
+                      child: CustomListTile(
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 11),
+                        onTap: () => BlocProvider.of<AuthBloc>(context).add(LoggedOut()),
+                        trailingWidget: Icon(Icons.navigate_next, color: Theme.of(ctx).buttonColor),
+                        leadingWidget: Icon(Icons.exit_to_app, color: Theme.of(ctx).buttonColor),
+                        title: 'Log out',
+                      ),
                     ),
                     SizedBox(
                       height: 10,

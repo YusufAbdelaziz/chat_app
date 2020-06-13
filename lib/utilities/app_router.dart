@@ -1,10 +1,11 @@
+import 'package:chatapp/screens/sign_up_screen/check_email_screen.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'package:chatapp/screens/chat_screen/chat_screen.dart';
 import 'package:chatapp/screens/sign_up_screen/sign_up_screen.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:page_transition/page_transition.dart';
 
+/// This class is responsible for navigation between different pages.
 class AppRouter {
   /// This is used to control the animation of each page.
   final pageTransitionType = PageTransitionType.fade;
@@ -25,9 +26,14 @@ class AppRouter {
           child: ChatScreen(),
         );
         break;
+      case CheckEmailScreen.routeName:
+        return PageTransition(
+            child: CheckEmailScreen(),
+            type: pageTransitionType,
+            settings: settings);
+        break;
       default:
         return null;
     }
   }
-
 }

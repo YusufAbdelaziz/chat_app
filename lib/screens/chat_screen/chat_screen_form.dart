@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:chatapp/api/firebase_repository.dart';
+import 'package:chatapp/api/firestore_repository.dart';
 import 'package:chatapp/bloc/all_contacts/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
