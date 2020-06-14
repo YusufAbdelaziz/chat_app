@@ -6,7 +6,7 @@ import 'package:bloc/bloc.dart';
 import 'package:chatapp/api/auth_repository.dart';
 import './bloc.dart';
 
-/// This BLoC is responsible of tracking the authentication status of the user.
+/// Responsible of tracking the authentication status of the user.
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
   bool isUserAuthenticated;
@@ -50,7 +50,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       isUserEmailVerified = authRepository.isUserEmailVerified();
     } else if (event is LoggedOut) {
       try {
+        /// After logging out, change the local variable.
         await authRepository.logOut();
+        isUserAuthenticated = await authRepository.isUserAuthenticated();
+        isUserEmailVerified = authRepository.isUserEmailVerified();
         yield LogoutSuccess();
       } catch (e, stacktrace) {
         print('LoggedOut stack trace --> ${stacktrace.toString()}');

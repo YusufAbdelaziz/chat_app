@@ -21,6 +21,8 @@ class FirestoreRepository {
 
   /// Adding the user to the firestore database.
   Future<void> addFirestoreUser({@required Map<String, dynamic> userData}) async {
+    /// The document id should be the user email as the id of the user changes so you don't want
+    /// duplicate documents.
     await _firestoreInstance.collection('users').document(userData['userEmail']).setData(userData);
   }
 

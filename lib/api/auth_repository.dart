@@ -20,6 +20,7 @@ class AuthRepository {
   AuthResult _authResult;
   FirebaseUser _firebaseUser;
 
+  /// Signs user in with facebook and authenticate it using [FirebaseAuth].
   Future<void> signInWithFacebook() async {
     _facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
     final result = await _facebookLogin.logIn(['email']);
@@ -38,7 +39,7 @@ class AuthRepository {
     }
   }
 
-  /// This method is used to make a request to fetch the user name, email and picture.
+  /// Making a request to fetch the user name, email and picture.
   Future<void> _getFacebookUserInfo(
       {@required String token, @required FirebaseUser firebaseUser}) async {
     final graphResponse = await http.get(
@@ -47,6 +48,7 @@ class AuthRepository {
     await _userRepo.updateFacebookUserInfo(profileData: profileData, firebaseUser: firebaseUser);
   }
 
+  /// Signs user in with google and authenticate it using [FirebaseAuth].
   Future<void> signInWithGoogle() async {
     final googleUser = await _googleSignIn.signIn();
     final googleAuth = await googleUser.authentication;
@@ -57,6 +59,7 @@ class AuthRepository {
     await _userRepo.updateGoogleUserInfo(googleAccount: googleUser, firebaseUser: _firebaseUser);
   }
 
+  /// Signs the user in with email, password using [FirebaseAuth].
   Future<void> signInWithEmailAndPassword(
       {@required String email, @required String password}) async {
     _authResult =
@@ -67,6 +70,7 @@ class AuthRepository {
     await _userRepo.updateSignInUserInfo(firebaseUser: _firebaseUser);
   }
 
+  /// Signs the user up with email, password and user name using [FirebaseAuth] and sending email verification.
   Future<void> signUpWithEmailAndPassword(
       {@required String email, @required String password, @required String userName}) async {
     _authResult = await _firebaseAuthInstance.createUserWithEmailAndPassword(
@@ -76,18 +80,22 @@ class AuthRepository {
     await _userRepo.updateSignUpUserInfo(firebaseUser: _firebaseUser, name: userName);
   }
 
+  /// Logs the user out by signing him out using firebase auth instance and clearing his data that
+  /// was stored in Hive.
   Future<void> logOut() async {
     await _firebaseAuthInstance.signOut();
     await _userRepo.clearUserData();
   }
 
+  /// Checks if the user is authenticated after getting the proper reference object of firebase auth
+  /// instance.
   Future<bool> isUserAuthenticated() async {
     /// We are refreshing the firebase object even after the app is closed.
     _firebaseUser = await _firebaseAuthInstance.currentUser();
-    await _userRepo.fetchUserData();
     return _userRepo.isUserValid();
   }
 
+  /// Adds the user to firestore database.
   Future<void> addUserToFirestore() async {
     await _firestoreRepo.addFirestoreUser(userData: _userRepo.getFirestoreUserData());
   }
@@ -100,7 +108,7 @@ class AuthRepository {
     print('is verified ? ' + _firebaseUser.isEmailVerified.toString());
     print('email ' + _firebaseUser.email);
     if (_firebaseUser.isEmailVerified) {
-      _userRepo.verifyEmail();
+      await _userRepo.verifyEmail();
       return true;
     }
     return false;

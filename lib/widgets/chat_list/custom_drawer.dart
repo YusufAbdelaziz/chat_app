@@ -1,5 +1,6 @@
 import 'package:chatapp/bloc/auth_bloc/bloc.dart';
 import 'package:chatapp/bloc/rive_actor/bloc.dart';
+import 'package:chatapp/bloc/theme_bloc/bloc.dart';
 import 'package:chatapp/models/user.dart';
 import 'package:chatapp/widgets/chat_list/custom_list_tile.dart';
 import 'package:flare_flutter/flare_actor.dart';
@@ -17,9 +18,13 @@ class CustomDrawer extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return BlocProvider<RiveActorBloc>(
-      /// TODO : Change how the event is triggered with respect to the theme
-      create: (context) => RiveActorBloc()
-        ..add(DayEvent(animationName: user.isDarkMode ?? false ? nightIdle : dayIdle)),
+      create: (context) {
+        if (user.isDarkMode) {
+          return RiveActorBloc()..add(NightEvent(animationName: nightIdle));
+        } else {
+          return RiveActorBloc()..add(DayEvent(animationName: dayIdle));
+        }
+      },
       child: Builder(
         builder: (ctx) => Drawer(
             child: Column(
@@ -37,7 +42,7 @@ class CustomDrawer extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 width: width,
-                color: Colors.amber.shade50,
+                color: Theme.of(context).canvasColor,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
@@ -82,9 +87,11 @@ class CustomDrawer extends StatelessWidget {
                         if (currentState is NightState) {
                           BlocProvider.of<RiveActorBloc>(ctx)
                               .add(SwitchingEvent(animationName: switchDay));
+                          BlocProvider.of<ThemeBloc>(context).add(ThemeSwitched(isDarkMode: false));
                         } else if (currentState is DayState) {
                           BlocProvider.of<RiveActorBloc>(ctx)
                               .add(SwitchingEvent(animationName: switchNight));
+                          BlocProvider.of<ThemeBloc>(context).add(ThemeSwitched(isDarkMode: true));
                         }
                       },
                       trailingWidget:

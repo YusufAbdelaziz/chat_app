@@ -11,7 +11,6 @@ class ChatListScreen extends StatefulWidget {
 }
 
 class _ChatListScreenState extends State<ChatListScreen> {
-
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -38,7 +37,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           height: height,
           width: width,
           decoration: BoxDecoration(
-              color: Colors.amber.shade50,
+              color: Theme.of(context).canvasColor,
               borderRadius:
                   BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25))),
           child: BlocConsumer<AllContactsBloc, AllContactsState>(

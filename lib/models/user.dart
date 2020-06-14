@@ -30,11 +30,11 @@ class User {
       'email': _user.email,
       'isVerified': _user.isVerified,
       'themeMode': _user.isDarkMode,
-      'tokenExpiryDate': _user.tokenExpiryDate.toIso8601String()
+      'tokenExpiryDate': _user.tokenExpiryDate?.toIso8601String()
     });
   }
 
-  void changeSingletonFromJson(String userJson) {
+  void changeUserFromJson(String userJson) {
     final jsonMap = json.decode(userJson) as Map<String, dynamic>;
     _user.isDarkMode = jsonMap['themeMode'];
     _user.token = jsonMap['token'];

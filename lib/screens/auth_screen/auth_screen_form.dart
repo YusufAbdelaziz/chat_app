@@ -146,7 +146,7 @@ class _AuthScreenFormState extends State<AuthScreenForm> {
                         Scaffold.of(context).showSnackBar(SnackBar(
                           content: Text(
                             state.errorMessage,
-                          ),
+                          ),duration: Duration(seconds: 5),
                           backgroundColor: Theme.of(context).errorColor,
                           action: SnackBarAction(
                             onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
