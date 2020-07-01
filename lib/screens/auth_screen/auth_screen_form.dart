@@ -1,12 +1,13 @@
-import 'package:chatapp/bloc/auth_bloc/auth_bloc.dart';
-import 'package:chatapp/bloc/auth_bloc/auth_event.dart';
-import 'package:chatapp/bloc/login_blocs/login_bloc/bloc.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:chatapp/bloc/login_blocs/login_email_bloc/bloc.dart';
-import 'package:chatapp/bloc/login_blocs/login_password_bloc/bloc.dart';
-import 'package:chatapp/bloc/login_blocs/password_visibility_bloc/bloc.dart';
+import 'package:chatapp/blocs/login_blocs/login_email_bloc/bloc.dart';
+import 'package:chatapp/blocs/login_blocs/login_password_bloc/bloc.dart';
+import 'package:chatapp/blocs/login_blocs/password_visibility_bloc/bloc.dart';
+import 'package:chatapp/blocs/auth_bloc/auth_bloc.dart';
+import 'package:chatapp/blocs/auth_bloc/auth_event.dart';
+import 'package:chatapp/blocs/login_blocs/login_bloc/bloc.dart';
 import 'package:chatapp/screens/sign_up_screen/sign_up_screen.dart';
 import '../../widgets/login_and_sign_up/custom_text_field.dart';
 import '../../widgets/login_and_sign_up/custom_button.dart';

@@ -23,14 +23,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_bloc: ^4.0.0
+  flutter_bloc: ^4.0.1
   hive: ^1.4.1+1
   hive_flutter: ^0.3.0+2
   auto_size_text: ^2.1.0
   emoji_picker: ^0.1.0
   visibility_detector: ^0.1.5
-  equatable: ^1.1.1
-  cloud_firestore: ^0.13.6
+  equatable: ^1.2.0
+  cloud_firestore: ^0.13.7
   page_transition: ^1.1.5
   firebase_auth: ^0.16.1
   connectivity: '>=0.4.8+6 <2.0.0'
@@ -38,10 +38,11 @@ dependencies:
   rxdart: ^0.24.1
   google_sign_in: ^4.5.1
   flutter_facebook_login: ^3.0.0
-  flare_flutter: ^2.0.3
+  flare_flutter: ^2.0.4
   http: ^0.12.1
-  path_provider: ^1.6.10
+  path_provider: ^1.6.11
   flare_splash_screen: ^3.0.1
+  intl: ^0.16.1
 
 
 

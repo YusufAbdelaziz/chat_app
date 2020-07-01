@@ -1,15 +1,13 @@
 import 'dart:convert';
 
-import 'package:chatapp/api/firestore_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 import 'user_repository.dart';
+import 'package:chatapp/api/firestore_repository.dart';
 
 class AuthRepository {
   final _firebaseAuthInstance = FirebaseAuth.instance;
@@ -80,9 +78,11 @@ class AuthRepository {
     await _userRepo.updateSignUpUserInfo(firebaseUser: _firebaseUser, name: userName);
   }
 
-  /// Logs the user out by signing him out using firebase auth instance and clearing his data that
-  /// was stored in Hive.
+  /// Logs the user out using firebase auth instance, googleSignIn instance and facebookLogin instance
+  /// as well as clearing his data that was stored in Hive.
   Future<void> logOut() async {
+    await _googleSignIn.signOut();
+    await _facebookLogin.logOut();
     await _firebaseAuthInstance.signOut();
     await _userRepo.clearUserData();
   }
@@ -120,6 +120,14 @@ class AuthRepository {
 
   Future<void> sendEmailVerification() async {
     await _firebaseUser.sendEmailVerification();
+  }
+
+  Stream<FirebaseUser> onAuthStateChanged() {
+    return _firebaseAuthInstance.onAuthStateChanged;
+  }
+
+  Future<void> updateUserToken({@required String token, @required DateTime expiryDate}) async {
+    await _userRepo.updateUserToken(token: token, expiryTime: expiryDate);
   }
 
   /// This is used to return a proper text rather than scream caps warnings that [FirebaseAuth] returns.

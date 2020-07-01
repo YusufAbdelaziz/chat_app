@@ -1,11 +1,12 @@
-import 'package:chatapp/bloc/auth_bloc/bloc.dart';
-import 'package:chatapp/bloc/rive_actor/bloc.dart';
-import 'package:chatapp/bloc/theme_bloc/bloc.dart';
-import 'package:chatapp/models/user.dart';
-import 'package:chatapp/widgets/chat_list/custom_list_tile.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:chatapp/blocs/auth_bloc/bloc.dart';
+import 'package:chatapp/blocs/rive_actor/bloc.dart';
+import 'package:chatapp/blocs/theme_bloc/bloc.dart';
+import 'package:chatapp/models/user.dart';
+import 'package:chatapp/widgets/chat_list/custom_list_tile.dart';
 
 class CustomDrawer extends StatelessWidget {
   final nightIdle = 'night_idle';
@@ -16,7 +17,6 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
     return BlocProvider<RiveActorBloc>(
       create: (context) {
         if (user.isDarkMode) {
@@ -40,7 +40,7 @@ class CustomDrawer extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 20),
+                padding: EdgeInsets.symmetric(vertical: 20,horizontal: 5 ),
                 width: width,
                 color: Theme.of(context).canvasColor,
                 child: Column(
@@ -56,25 +56,23 @@ class CustomDrawer extends StatelessWidget {
                             )
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(50),
-                              child: Image.network(
-                                user.imageUrl,
+                              child: FadeInImage.assetNetwork(
+                                placeholder: 'assets/images/user.png',
+                                image: user.imageUrl,
                                 fit: BoxFit.contain,
                               ),
                             ),
                     ),
-                    FlatButton.icon(
-                      onPressed: () => print('edit profile'),
-                      splashColor: Colors.transparent,
-                      icon: Icon(
-                        Icons.settings,
-                        size: 20,
-                        color: Theme.of(ctx).buttonColor,
-                      ),
+                    Chip(
                       label: Text(
-                        'Change Picture',
-                        style: TextStyle(color: Colors.black54),
+                        user.name,
+                        style: Theme.of(context).textTheme.headline2,
                       ),
+                      elevation: 2,
+                      backgroundColor: Theme.of(context).accentColor,
+                      labelPadding: EdgeInsets.symmetric(horizontal: 10),
                     ),
+
                     SizedBox(
                       height: 20,
                     ),
@@ -165,6 +163,7 @@ class CustomDrawer extends StatelessWidget {
                       onTap: () => showAboutDialog(
                           context: ctx,
                           applicationName: 'Chat App',
+                          applicationLegalese: 'This app is made by Yusuf Abdelaziz :D',
                           applicationIcon: Image.asset(
                             'assets/images/message-logo.png',
                             width: 40,

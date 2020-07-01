@@ -1,8 +1,8 @@
-import 'package:chatapp/bloc/auth_bloc/bloc.dart';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:flare_splash_screen/flare_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:chatapp/blocs/auth_bloc/bloc.dart';
+import 'package:flare_splash_screen/flare_splash_screen.dart';
 
 class SplashPage extends StatelessWidget {
   @override

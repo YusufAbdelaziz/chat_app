@@ -1,9 +1,11 @@
-import 'package:chatapp/api/auth_repository.dart';
-import 'package:chatapp/bloc/auth_bloc/bloc.dart';
-import 'package:chatapp/bloc/sign_up_blocs/email_validation_bloc/bloc.dart';
-import 'package:chatapp/widgets/login_and_sign_up/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:chatapp/api/auth_repository.dart';
+import 'package:chatapp/blocs/auth_bloc/bloc.dart';
+import 'package:chatapp/blocs/sign_up_blocs/email_validation_bloc/bloc.dart';
+import 'package:chatapp/widgets/login_and_sign_up/custom_button.dart';
+
 
 class CheckEmailScreen extends StatelessWidget {
   static const routeName = '/check-email-screen';

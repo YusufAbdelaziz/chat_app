@@ -1,11 +1,11 @@
-import 'package:chatapp/bloc/auth_bloc/bloc.dart';
-import 'package:chatapp/bloc/sign_up_blocs/sign_up_bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
-import 'package:chatapp/bloc/sign_up_blocs/sign_up_email_bloc/bloc.dart';
-import 'package:chatapp/bloc/sign_up_blocs/sign_up_name_bloc/bloc.dart';
-import 'package:chatapp/bloc/sign_up_blocs/sign_up_password_bloc/bloc.dart';
+import 'package:chatapp/blocs/sign_up_blocs/sign_up_email_bloc/bloc.dart';
+import 'package:chatapp/blocs/sign_up_blocs/sign_up_name_bloc/bloc.dart';
+import 'package:chatapp/blocs/sign_up_blocs/sign_up_password_bloc/bloc.dart';
+import 'package:chatapp/blocs/auth_bloc/bloc.dart';
+import 'package:chatapp/blocs/sign_up_blocs/sign_up_bloc/bloc.dart';
 import '../../widgets/login_and_sign_up/custom_text_field.dart';
 import '../../widgets/login_and_sign_up/custom_button.dart';
 

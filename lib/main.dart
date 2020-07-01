@@ -7,17 +7,17 @@ import 'package:path_provider/path_provider.dart' as pathProvider;
 
 import 'package:chatapp/api/firestore_repository.dart';
 import 'api/user_repository.dart';
-import 'bloc/all_contacts/bloc.dart';
-import 'bloc/auth_bloc/bloc.dart';
+import 'blocs/all_contacts/bloc.dart';
+import 'blocs/auth_bloc/bloc.dart';
 import 'utilities/app_router.dart';
 import 'package:chatapp/api/auth_repository.dart';
 import 'utilities/simple_bloc_delegate.dart';
-import 'package:chatapp/bloc/theme_bloc/bloc.dart';
+import 'package:chatapp/blocs/theme_bloc/bloc.dart';
 import 'package:chatapp/screens/auth_screen/auth_screen.dart';
-import 'package:chatapp/screens/chat_list_screen/chat_list_screen.dart';
 import 'package:chatapp/screens/sign_up_screen/check_email_screen.dart';
-import 'package:chatapp/screens/splash_screen.dart';
+import 'package:chatapp/screens/splash_page.dart';
 import 'package:chatapp/utilities/theme_mode.dart';
+import 'package:chatapp/screens/chat_list_screen/chat_list_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,8 +60,8 @@ class _MyAppState extends State<MyApp> {
         providers: [
           BlocProvider<AllContactsBloc>(
             create: (context) => AllContactsBloc(
-                firebaseRepository: RepositoryProvider.of<FirestoreRepository>(context))
-              ..add(LoadAllContactsEvent()),
+                firestoreRepo: RepositoryProvider.of<FirestoreRepository>(context))
+              ..add(AllContactsLoaded()),
           ),
           BlocProvider<AuthBloc>(
             create: (context) =>

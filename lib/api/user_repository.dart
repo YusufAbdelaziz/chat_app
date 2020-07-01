@@ -57,7 +57,7 @@ class UserRepository {
 
   /// Saves user data using Hive.
   Future<void> saveUserData() async {
-    /// Declare the userBox variable then check if there's a box opened or not, so you cover the
+    /// Declare the userBox variable then check if there's a box has been opened or not, so you cover the
     /// scenario in which the user may log in so his data is saved and then he logged out so his data is
     /// removed therefore the box is removed and lastly the user logged in again so you have to re-
     /// create the box once again.
@@ -113,13 +113,23 @@ class UserRepository {
     };
   }
 
+  /// Sets the new theme that user chooses.
   Future<void> setUserTheme({@required isDarkMode}) async {
     _user.isDarkMode = isDarkMode;
     await saveUserData();
   }
 
+  Future<void> updateUserToken({@required String token, @required DateTime expiryTime}) async{
+    _user.token = token;
+    _user.tokenExpiryDate = expiryTime;
+    await saveUserData();
+  }
+
   bool get isDarkMode => _user.isDarkMode;
 
+  String get userId => _user.id;
+
+  String get userEmail => _user.email;
   static UserRepository _userRepository;
   UserRepository._();
   static UserRepository getInstance() {

@@ -1,7 +1,6 @@
 import 'dart:ui';
 
-import 'package:chatapp/api/firestore_repository.dart';
-import 'package:chatapp/bloc/all_contacts/bloc.dart';
+import 'package:chatapp/blocs/chat/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,16 +8,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 
-import 'package:chatapp/bloc/hide_scroll_bar/bloc.dart';
+import 'package:chatapp/blocs/hide_scroll_bar/bloc.dart';
 import 'package:chatapp/utilities/single_child_scroll_view_with_scroll_bar.dart';
 import 'package:chatapp/widgets/chat_screen/chat.dart';
-import 'package:chatapp/bloc/emoji_keyboard/bloc.dart';
+import 'package:chatapp/blocs/emoji_keyboard/bloc.dart';
+import 'package:chatapp/blocs/send_icon/bloc.dart';
 
 class ChatScreenForm extends StatefulWidget {
   static const routeName = '/chat-screen';
-  final DocumentSnapshot documentSnapshot;
-
-  const ChatScreenForm({@required this.documentSnapshot});
+  final DocumentSnapshot friendData;
+  final List<DocumentSnapshot> messages;
+  final String chatId;
+  const ChatScreenForm({
+    @required this.friendData,
+    @required this.messages,
+    @required this.chatId,
+  });
   @override
   _ChatScreenFormState createState() => _ChatScreenFormState();
 }
@@ -74,22 +79,21 @@ class _ChatScreenFormState extends State<ChatScreenForm> {
               onPressed: () => print('another three dots'),
             ),
           ],
-          title: Text('Name'),
+          title: Text(widget.friendData['name']),
           centerTitle: true,
         ),
         body: ClipRRect(
           borderRadius:
               BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
           child: Container(
-            padding: const EdgeInsets.only(
-              top: 10,
-            ),
             height: height,
             width: width,
             color: Theme.of(context).accentColor,
             child: Column(
               children: <Widget>[
-                Expanded(child: Chat(documentSnapshot: widget.documentSnapshot)),
+                Expanded(
+                  child: Chat(),
+                ),
                 Container(
                   margin: EdgeInsets.symmetric(
                     horizontal: 5,
@@ -158,6 +162,15 @@ class _ChatScreenFormState extends State<ChatScreenForm> {
                                           .add(HideEmojiKeyboardEvent());
                                     }
                                   },
+                                  onChanged: (msg) {
+                                    if (msg.trim().isNotEmpty) {
+                                      BlocProvider.of<SendIconBloc>(context)
+                                          .add(ColorSwitched(isColorSwitched: true));
+                                    } else {
+                                      BlocProvider.of<SendIconBloc>(context)
+                                          .add(ColorSwitched(isColorSwitched: false));
+                                    }
+                                  },
                                   focusNode: focusNode,
                                   controller: _messageController,
                                   style: TextStyle(fontSize: 18),
@@ -179,14 +192,29 @@ class _ChatScreenFormState extends State<ChatScreenForm> {
                         }),
                       )),
                       IconButton(
-                        icon: Icon(
-                          Icons.send,
-                          color: Colors.grey.shade600,
+                        icon: BlocBuilder<SendIconBloc, SendIconState>(
+                          builder: (context, state) => Icon(
+                            Icons.send,
+                            color: state is IconColored
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey.shade600,
+                          ),
                         ),
                         onPressed: () {
-                          BlocProvider.of<AllContactsBloc>(context)
-                              .firebaseRepository
-                              .addMessage(message: _messageController.text);
+                          final message = _messageController.text;
+
+                          /// When a message is sent, close the keyboard, clear the text field and reset
+                          /// the send icon state.
+                          if (message.trim().isNotEmpty) {
+                            BlocProvider.of<ChatBloc>(context).add(ChatMessageAdded(
+                                message: message,
+                                chatId: widget.chatId,
+                                friendId: widget.friendData['id']));
+                            FocusScope.of(context).unfocus();
+                            _messageController.clear();
+                            BlocProvider.of<SendIconBloc>(context)
+                                .add(ColorSwitched(isColorSwitched: false));
+                          }
                         },
                       ),
                     ],

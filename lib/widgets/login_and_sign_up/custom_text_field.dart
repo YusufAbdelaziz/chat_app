@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:chatapp/screens/auth_screen/auth_screen.dart';
 import 'package:chatapp/screens/sign_up_screen/sign_up_screen.dart';
+
 /// This widget is used in [AuthScreen] and [SignUpScreen] to get the email and password for
 /// authentication.
 class CustomTextField extends StatelessWidget {
@@ -15,6 +16,7 @@ class CustomTextField extends StatelessWidget {
   final Widget suffixIcon;
   final FocusNode focusNode;
   final Function onSubmitted;
+  final TextStyle errorStyle;
   const CustomTextField(
       {@required this.labelText,
       @required this.obscureText,
@@ -25,7 +27,8 @@ class CustomTextField extends StatelessWidget {
       @required this.errorText,
       @required this.textInputType,
       @required this.textEditingController,
-      @required this.onChanged});
+      @required this.onChanged,
+      this.errorStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,7 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(
             labelText: labelText,
             border: InputBorder.none,
-            labelStyle: TextStyle(fontSize: 16),
+            labelStyle: TextStyle(fontSize: 16),errorStyle: errorStyle,
             errorText: errorText,
             icon: icon,
             suffixIcon: suffixIcon),

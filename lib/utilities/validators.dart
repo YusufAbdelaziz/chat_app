@@ -10,7 +10,7 @@ class Validators {
       RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   static bool isValidEmail(String email) {
-    return _emailRegExp.hasMatch(email);
+    return _emailRegExp.hasMatch(email) && email.endsWith('com');
   }
 
   static bool isValidPassword(String password) {
@@ -22,7 +22,7 @@ class Validators {
   }
 
   static final String errorPasswordText =
-      'Password should be more than 8 digits and\ncontain upper, lower characters and numbers.';
+      'Password should be more than 8 digits and\ncontains upper, lower characters and numbers.';
 
   static final String errorNameText = 'Name should not be empty or have numbers.';
   static bool isValidName(String name) {

@@ -11,14 +11,24 @@ class InitialAllContactsState extends AllContactsState {
   List<Object> get props => [];
 }
 
-class LoadedContactsState extends AllContactsState {
-  final QuerySnapshot chatData;
+class LoadChatsState extends AllContactsState {
+  final QuerySnapshot contacts;
 
-  LoadedContactsState({@required this.chatData});
+  LoadChatsState({@required this.contacts});
   @override
   List<Object> get props => [];
   @override
-  String toString() => 'LoadedContactsState : {chatData doc num : ${chatData.documents.length}';
+  String toString() => 'LoadedContactsState : {chatData doc num : ${contacts.documents.length}';
+}
+
+class UpdateContacts extends AllContactsState {
+  final QuerySnapshot contacts;
+
+  UpdateContacts({@required this.contacts});
+  @override
+  List<Object> get props => [];
+  @override
+  String toString() => 'UpdateContacts : {contacts doc num : ${contacts.documents.length}';
 }
 
 class ErrorContactsState extends AllContactsState {

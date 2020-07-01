@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 /// Responsible of changing between dark and light modes.
 class CustomThemeMode {
   static final light = ThemeData(
-      primaryColor: Colors.blue,
+      primaryColor: Colors.deepOrangeAccent,
       accentColor: Colors.white,
-      cursorColor: Colors.blue,
+      cursorColor: Colors.deepOrangeAccent,
       canvasColor: Colors.amber.shade50,
       buttonColor: Colors.black54,
       backgroundColor: Colors.white,
-      scaffoldBackgroundColor: Colors.blue,
+      scaffoldBackgroundColor: Colors.deepOrangeAccent,
       fontFamily: 'Roboto',
       textTheme: TextTheme(
 

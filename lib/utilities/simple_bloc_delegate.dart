@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// This class is used to work as a supervisor to supervise the state movement from state to another
-/// as well as the event that is being triggered.
+/// Used to work as a supervisor to supervise the state transition from state to another
+/// as well as the event that is being triggered to make such transition.
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override
