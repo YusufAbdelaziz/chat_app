@@ -72,8 +72,9 @@ class UserRepository {
   /// Fetches data from Hive.
   Future<void> fetchUserData() async {
     var userBox = await Hive.openBox(userBoxName);
-    if (userBox.isNotEmpty) {
+    if (userBox.isNotEmpty ) {
       print('we got dataaaa');
+      print('userBox --> ${userBox.getAt(0)}');
       _user.changeUserFromJson(userBox.getAt(0));
     } else {
       print('box is empty');

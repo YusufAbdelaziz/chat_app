@@ -36,20 +36,22 @@ class User {
 
   void changeUserFromJson(String userJson) {
     final jsonMap = json.decode(userJson) as Map<String, dynamic>;
-    _user.isDarkMode = jsonMap['themeMode'];
-    _user.token = jsonMap['token'];
-    _user.id = jsonMap['id'];
-    _user.name = jsonMap['name'];
-    _user.email = jsonMap['email'];
-    _user.isVerified = jsonMap['isVerified'];
-    _user.imageUrl = jsonMap['imageUrl'];
-    _user.tokenExpiryDate = DateTime.parse(jsonMap['tokenExpiryDate']);
-    print('isDarkMode : ' + _user.isDarkMode.toString());
-    print('token : ' + _user.token.substring(0,8));
-    print('id : ' + _user.id);
-    print('name :' + _user.name);
-    print('email : ' + _user.email);
-    print('isEmailVerified : ' + _user.isVerified.toString()?? null);
-    print('expiryDate : ' + _user.tokenExpiryDate.toIso8601String());
+    if (jsonMap['name'] != null && jsonMap['token'] != null) {
+      _user.isDarkMode = jsonMap['themeMode'];
+      _user.token = jsonMap['token'];
+      _user.id = jsonMap['id'];
+      _user.name = jsonMap['name'];
+      _user.email = jsonMap['email'];
+      _user.isVerified = jsonMap['isVerified'];
+      _user.imageUrl = jsonMap['imageUrl'];
+      _user.tokenExpiryDate = DateTime.tryParse(jsonMap['tokenExpiryDate']);
+      print('isDarkMode : ' + _user.isDarkMode.toString());
+      print('token : ' + _user.token.substring(0, 8));
+      print('id : ' + _user.id);
+      print('name :' + _user.name);
+      print('email : ' + _user.email);
+      print('isEmailVerified : ' + _user.isVerified.toString() ?? null);
+      print('expiryDate : ' + _user.tokenExpiryDate.toIso8601String());
+    }
   }
 }
