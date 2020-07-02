@@ -17,3 +17,4 @@ Chat App using Flutter and BLoC pattern with Firebase as backend service
 
 * The two animation used can be found on rive website.
 * App design is taken from [here](https://dribbble.com/shots/6428387-Messenger-Mobile-Concept)
+* You can download the app from [here](https://drive.google.com/file/d/1I_-_FszQ1U_1OinpP3aqP0I6xShHzKJD/view?usp=sharing)
